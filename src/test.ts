@@ -1,4 +1,5 @@
-export function SomeFn(){
- console.log("123 ");
+export function SomeFn(arg:number): string{
+console.log("123 ");
+return  ""
     
-}
+} 
