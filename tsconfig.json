@@ -4,12 +4,18 @@
     "noImplicitAny": true,
     "module": "es6",
     "moduleResolution": "node",
+    "baseUrl":".",  
     "target": "es5",
     "jsx": "react-jsx",
     "allowJs": true,
     "esModuleInterop": true, //? позволяет работать с пакетами , которые используют common js как с обычными пакетами с помощью import require() module.export() = common js
     "allowSyntheticDefaultImports": true, // 
   
+  },
+  "ts-node":{
+    "compilerOptions":{
+      "module": "commonjs"
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

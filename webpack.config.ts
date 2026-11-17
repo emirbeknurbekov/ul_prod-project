@@ -1,31 +1,39 @@
-const path = require("path");
-const webpack = require("webpack");
-const HTMLWebpackPlugin = require("html-webpack-plugin");
+import path from"path"
+import webpack from "webpack"
+import { buildWebpackConfig } from "./config/build/buildWebpackConfig";
+import { BuildPaths } from "./config/build/types/config";
 
-module.exports = {
-  mode: "development",
+const paths:BuildPaths = {
   entry: path.resolve(__dirname, "src", "index.ts"),
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/, 
-        use: "ts-loader",
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  resolve: {
-    extensions: [".tsx", ".ts", ".js"],
-  },
-  output: {
-    filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, "build"),
-    clean: true
-  },
-  plugins: [
-    new HTMLWebpackPlugin({
-      template: path.resolve(__dirname, "public", "index.html")
-    }), 
-    new webpack.ProgressPlugin()
-  ]
-};
+  build: path.resolve(__dirname, "build") ,
+  html:path.resolve(__dirname, "public", "index.html")  ,
+}
+
+
+const mode = "development"
+const isDev = mode === "development"
+
+const config: webpack.Configuration  = buildWebpackConfig({
+  mode:"development",
+  paths, 
+  isDev
+})
+
+export default config
+
+//** npm start
+//    ↓
+//**webpack CLI читает webpack.config.ts
+//    ↓
+// webpack.config.ts вызывает buildWebpackConfig(...)
+//    ├── buildWebpackConfig.ts собирает общую конфигурацию
+//    ├── buildLoaders.ts возвращает правила обработки файлов
+//    ├── buildResolvers.ts возвращает правила поиска модулей
+//    └── buildPlugins.ts подключает плагины
+//    ↓
+// Webpack начинает с src/index.ts
+//    ↓
+// src/index.ts импортирует src/test.ts
+//    ↓
+// Webpack собирает связанные файлы в бандл
+// webpack.config.ts — входная точка сборки. А src/index.ts — входная точка приложения. Это разные роли: первый файл настраивает инструмент, второй содержит код приложения.
